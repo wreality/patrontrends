@@ -10,11 +10,11 @@ q-page.q-mt-md
         :error-message="errorMessage"
       )
     q-card.col-10
-      stats(:project="project")
+      stats(:project="project", v-if="projectLoaded")
 </template>
 
 <script>
-import { defineComponent, ref, watch } from "vue"
+import { defineComponent, ref, watch, computed } from "vue"
 import Stats from "components/Stats"
 import { api } from "src/boot/axios"
 export default defineComponent({
@@ -24,10 +24,14 @@ export default defineComponent({
     const patronicityUrl = ref("")
     const errorMessage = ref("")
     const project = ref({})
+    const projectLoaded = computed(() => {
+      return project.value && Object.keys(project.value).length !== 0
+    })
 
     const slugRegex = /https:\/\/www.patronicity.com\/project\/([\w_]+)#!\/$/
 
     watch(patronicityUrl, async (newValue) => {
+      project.value = {}
       if (!slugRegex.test(newValue)) {
         errorMessage.value = "Invalid patronicity URL"
         return
@@ -39,8 +43,8 @@ export default defineComponent({
       try {
         const response = await api.get(`fetch?slug=${slug}`)
         console.log(response.data)
-        if (response?.data?.success) {
-          project.value = response.data.result
+        if (response?.data) {
+          project.value = response.data
         } else {
           throw Error("Error processing result.")
         }
@@ -48,7 +52,7 @@ export default defineComponent({
         errorMessage.value = e.message
       }
     })
-    return { patronicityUrl, project, errorMessage }
+    return { patronicityUrl, project, errorMessage, projectLoaded }
   },
 })
 </script>

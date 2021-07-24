@@ -22,29 +22,52 @@ exports.handler = async function (event) {
     }
   }
 
-  const text = await response.text()
-  const projectId = text.match(/project-id="([0-9]+)"/)[1]
   const cookies = parseCookies(response)
+  const defaultOpts = {
+    headers: {
+      "x-xsrf-token": cookies.get("XSRF-TOKEN"),
+      cookie: cookiesToHeader(cookies),
+      "Content-Type": "application/json",
+    },
+  }
+
+  try {
+    response = await fetch(`${URL}/api/projectapi/view`, {
+      ...defaultOpts,
+      method: "POST",
+      body: JSON.stringify({ slug }),
+    })
+  } catch {
+    return errorResponse({ error: "Unable to find project id" })
+  }
+  let json = await response.json()
+  const project = json.result
+  const id = project.ID
 
   try {
     response = await fetch(`${URL}/api/projectapi/statsPanel`, {
+      ...defaultOpts,
       method: "POST",
-      headers: {
-        "x-xsrf-token": cookies.get("XSRF-TOKEN"),
-        cookie: cookiesToHeader(cookies),
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id: projectId }),
+      body: JSON.stringify({ id }),
     })
   } catch (e) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: e.message }),
-    }
+    return errorResponse({ error: e.message })
   }
+  json = await response.json()
+  Object.assign(project, json.result)
 
-  const project = await response.json()
+  try {
+    response = await fetch(`${URL}/api/projectapi/timeline`, {
+      ...defaultOpts,
+      method: "POST",
+      body: JSON.stringify({ slug }),
+    })
+  } catch {
+    return errorResponse({ error: "Unable to fetch timeline" })
+  }
+  json = await response.json()
 
+  project.timeline = { ...json.result.items }
   return {
     statusCode: 200,
     body: JSON.stringify(project),
@@ -69,6 +92,12 @@ function cookiesToHeader(cookies) {
     cArray.push(`${key}=${value}`)
   }
   return cArray.join(";")
+}
+function errorResponse(context) {
+  return {
+    statusCode: 500,
+    body: JSON.stringify(context),
+  }
 }
 
 // function log(context) {
