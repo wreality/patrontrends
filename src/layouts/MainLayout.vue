@@ -3,7 +3,8 @@ q-layout(view="lHh Lpr lFf")
   q-header(elevated="")
     q-toolbar
       q-toolbar-title Patronicity Trends
-      div GitHub
+      div
+        a(href="https://github.com/wreality/patrontrends") GitHub
   q-page-container
     router-view
 </template>
