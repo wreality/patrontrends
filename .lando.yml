@@ -1,0 +1,16 @@
+name: patrontrends
+services:
+  appserver:
+    type: nginx
+    ssl: true
+    config:
+      vhosts: .lando/default.conf.tpl
+  app:
+    port: false
+    type: node:14
+    build: yarn
+    command: yarn quasar dev
+    scanner: false
+proxy:
+  appserver:
+    - patrontrends.lndo.site
