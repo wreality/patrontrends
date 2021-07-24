@@ -76,14 +76,6 @@ module.exports = configure(function (ctx) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
     devServer: {
-      https: false,
-      port: 80,
-      open: false,
-      public: "https://patrontrends.lndo.site",
-      client: {
-        host: "patrontrends.lndo.site",
-        port: "443",
-      },
       historyApiFallback: {
         disableDotRule: true,
       },

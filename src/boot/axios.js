@@ -4,7 +4,7 @@ import { boot } from "quasar/wrappers"
 import axios from "axios"
 
 const api = axios.create({
-  baseURL: "https://www.patronicity.com/",
+  baseURL: ".netlify/functions/",
   withCredentials: true,
 })
 
