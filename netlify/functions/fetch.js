@@ -3,6 +3,7 @@
 const fetch = require("node-fetch")
 
 const URL = "https://www.patronicity.com/"
+const defaultOpts = {}
 
 exports.handler = async function (event) {
   const slug = event.queryStringParameters.slug
@@ -11,66 +12,43 @@ exports.handler = async function (event) {
       statusCode: 404,
     }
   }
-
-  let response
   try {
-    response = await fetch(`${URL}project/${slug}#!/`)
-  } catch (e) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: e.message }),
+    let response = await fetch(`${URL}project/${slug}#!/`)
+    const cookies = parseCookies(response)
+    Object.assign(defaultOpts, {
+      headers: {
+        "x-xsrf-token": cookies.get("XSRF-TOKEN"),
+        cookie: cookiesToHeader(cookies),
+        "Content-Type": "application/json",
+      },
+    })
+
+    const project = await fetchApi("view", { slug })
+
+    const id = project.ID
+
+    const statsPanelData = await fetchApi("statsPanel", { id })
+    Object.assign(project, statsPanelData)
+
+    const timeline = await fetchApi("timeline", { slug })
+    project.timeline = { ...timeline.items }
+
+    const donors = await fetchApi("donors", { id, lastId: 0 })
+
+    project.donors = donors.donors
+
+    while (project.donors.length < donors.count) {
+      const lastId = project.donors[project.donors.length - 1].ID
+      const donors = await fetchApi("donors", { id, lastId })
+      project.donors.push(...donors.donors)
     }
-  }
 
-  const cookies = parseCookies(response)
-  const defaultOpts = {
-    headers: {
-      "x-xsrf-token": cookies.get("XSRF-TOKEN"),
-      cookie: cookiesToHeader(cookies),
-      "Content-Type": "application/json",
-    },
-  }
-
-  try {
-    response = await fetch(`${URL}/api/projectapi/view`, {
-      ...defaultOpts,
-      method: "POST",
-      body: JSON.stringify({ slug }),
-    })
-  } catch {
-    return errorResponse({ error: "Unable to find project id" })
-  }
-  let json = await response.json()
-  const project = json.result
-  const id = project.ID
-
-  try {
-    response = await fetch(`${URL}/api/projectapi/statsPanel`, {
-      ...defaultOpts,
-      method: "POST",
-      body: JSON.stringify({ id }),
-    })
-  } catch (e) {
-    return errorResponse({ error: e.message })
-  }
-  json = await response.json()
-  Object.assign(project, json.result)
-
-  try {
-    response = await fetch(`${URL}/api/projectapi/timeline`, {
-      ...defaultOpts,
-      method: "POST",
-      body: JSON.stringify({ slug }),
-    })
-  } catch {
-    return errorResponse({ error: "Unable to fetch timeline" })
-  }
-  json = await response.json()
-
-  project.timeline = { ...json.result.items }
-  return {
-    statusCode: 200,
-    body: JSON.stringify(project),
+    return {
+      statusCode: 200,
+      body: JSON.stringify(project),
+    }
+  } catch (error) {
+    return errorResponse({ error })
   }
 }
 
@@ -84,6 +62,16 @@ function parseCookies(response) {
   })
 
   return cookies
+}
+
+async function fetchApi(endpoint, data) {
+  const response = await fetch(`${URL}/api/projectapi/${endpoint}`, {
+    ...defaultOpts,
+    method: "POST",
+    body: JSON.stringify(data),
+  })
+
+  return (await response.json()).result
 }
 
 function cookiesToHeader(cookies) {

@@ -1,45 +1,69 @@
 <template lang="pug">
-div {{ project.Name }}
-  .row
-    .col-3 Goal Progress
-    q-linear-progress.col-9(
-      size="50px",
-      :value="project.FundedPercentage / 100",
-      color="accent"
+div
+  .row.text-center
+    stat-box(:value="daysRemaining", caption="days reminaing")
+    stat-box(:value="`\$${pledged.toFixed(2)}`", caption="pledged")
+    stat-box(
+      :value="`\$${remainingAmount.toFixed(2)}`",
+      caption="left to raise"
     )
-      .absolute-full.flex.flex-center
-        q-badge(
-          color="white",
-          text-color="accent",
-          :label="project.FundedPercentage + '%'"
-        )
-  .row
-    .col-3 Campaign Deadline
-    q-linear-progress.col-9(
-      size="50px",
-      :value="lengthPercentage",
-      color="accent"
+
+  .row.q-my-md
+    .col-3.flex.flex-center
+      .text-center.text-subtitle2 Goal Progress
+    .col-9
+      q-linear-progress(
+        size="50px",
+        :value="project.FundedPercentage / 100",
+        color="secondary"
+      )
+        .absolute-full.flex.flex-center
+          q-badge(
+            color="white",
+            text-color="black",
+            :label="project.FundedPercentage + '%'"
+          )
+  .row.q-my-md
+    .col-3.flex.flex-center
+      .text-center.text-subtitle2 Campaign Deadline
+    .col-9
+      q-linear-progress(
+        size="50px",
+        :value="lengthPercentage",
+        color="secondary"
+      )
+        .absolute-full.flex.flex-center
+          q-badge(
+            color="white",
+            text-color="black",
+            :label="(lengthPercentage * 100).toFixed(1) + '%'"
+          )
+  .row.text-center
+    stat-box.col-md-3.col-sm-6(
+      :value="project.donors.length",
+      caption="donations"
     )
-      .absolute-full.flex.flex-center
-        q-badge(
-          color="white",
-          text-color="accent",
-          :label="(lengthPercentage * 100).toFixed(1) + '%'"
-        )
-  .row
-    .col-4 Average Donation / Day
-    .col-8 ${{ (pledged / daysElapsed).toFixed(2) }}
-  .row
-    .col-4 Remaining Donation / Day
-    .col-8 ${{ (remainingAmount / daysRemaining).toFixed(2) }}
+    stat-box.col-md-3.col-sm-6(
+      :value="`\$${(pledged / project.donors.length).toFixed(2)}`",
+      caption="average donation"
+    )
+    stat-box.col-md-3.col-sm-6(
+      :value="`\$${(pledged / daysElapsed).toFixed(2)}`",
+      caption="Pledged / day"
+    )
+    stat-box.col-md-3.col-sm-6(
+      :value="`\$${remainingAmount ? (remainingAmount / daysRemaining).toFixed(2) : '--'}`",
+      caption="Remaining / day"
+    )
 </template>
 
 <script>
 import { computed } from "vue"
 import moment from "moment"
-
+import StatBox from "components/StatBox.vue"
 export default {
   name: "Stats",
+  components: { StatBox },
   props: {
     project: {
       type: Object,
@@ -82,7 +106,8 @@ export default {
     })
 
     const remainingAmount = computed(() => {
-      return goal.value - pledged.value
+      const remaining = goal.value - pledged.value
+      return remaining > 0 ? remaining : 0
     })
 
     return {
