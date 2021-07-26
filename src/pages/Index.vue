@@ -7,8 +7,7 @@ q-card
       type="a"
     )
     .text-h6 {{ project.Name }}
-  q-card-section
-    stats(:project="project", v-if="projectLoaded")
+  stats(:project="project", v-if="projectLoaded")
 .row.q-pt-md
   q-card.col-md-6
     q-card-section

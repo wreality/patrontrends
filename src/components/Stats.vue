@@ -1,5 +1,5 @@
 <template lang="pug">
-div
+q-card-section
   .row.text-center
     stat-box(:value="daysRemaining", caption="days reminaing")
     stat-box(:value="currency(pledged)", caption="pledged")
@@ -35,6 +35,7 @@ div
             text-color="black",
             :label="(lengthPercentage * 100).toFixed(1) + '%'"
           )
+q-card-section.bg-accent.text-white
   .row.text-center
     stat-box.col-md-3.col-sm-6(
       :value="project.donors.length",
