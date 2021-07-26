@@ -4,11 +4,11 @@ line-chart(:chartData="data", :options="options")
 
 <script>
 import { LineChart } from "vue-chart-3"
-import { defineComponent } from "vue"
-import moment from "moment"
+import { defineComponent, toRaw, ref, onMounted } from "vue"
+import { DateTime } from "luxon"
 import { Chart, registerables } from "chart.js"
 import annotationPlugin from "chartjs-plugin-annotation"
-import "chartjs-adapter-moment"
+import "chartjs-adapter-luxon"
 import "chartjs-plugin-colorschemes"
 
 Chart.register(...registerables)
@@ -27,117 +27,115 @@ export default defineComponent({
     },
   },
   setup(props) {
-    //loop through donors and build a map of date and totals
+    const data = ref({})
+    const options = ref({})
 
-    const startEvent = Object.entries(props.project.timeline).find(
-      // eslint-disable-next-line
-        ([_, v]) => {
-        return v.type === "event" && v.subtype == "campaign_started"
-      }
-    )[1]
-    const startDate = moment(startEvent.date)
+    onMounted(async () => {
+      const goal = parseFloat(props.project.Goal)
+      const pledged = parseFloat(props.project.PledgeAmount)
 
-    const goal = parseFloat(props.project.Goal)
-    const pledged = parseFloat(props.project.PledgeAmount)
+      let acc = 0
+      const donors = [...props.project.donors]
 
-    let acc = 0
-    const donors = [...props.project.donors]
-
-    donors.sort((a, b) => moment(a.Date).diff(moment(b.Date)))
-    const data = donors.map((donor) => {
-      acc += parseFloat(donor.Amount)
-      const date = moment(donor.Date)
-      return {
-        x: date,
-        y: acc,
-        donor,
-      }
-    })
-    const dataset = {
-      label: "Donations",
-      data,
-      radius: 3,
-    }
-    const options = {
-      plugins: {
-        title: {
-          display: true,
-          text: "Donation History",
-        },
-        colorschemes: {
-          scheme: "brewer.DarkTwo3",
-        },
-        autocolors: true,
-        tooltip: {
-          callbacks: {
-            afterBody: function (context) {
-              console.log(context)
-              return `${context[0].raw.donor.Name}: ${currency.format(
-                parseFloat(context[0].raw.donor.Amount)
-              )}`
-            },
-            label: function (context) {
-              var label = context.dataset.label || ""
-              console.log(context)
-              if (label) {
-                label += ": "
-              }
-              if (context.parsed.y !== null) {
-                label += new Intl.NumberFormat("en-US", {
-                  style: "currency",
-                  currency: "USD",
-                }).format(context.parsed.y)
-              }
-              return label
-            },
+      donors.sort((a, b) => DateTime.fromISO(a.Date) - DateTime.fromISO(b.Date))
+      const donations = donors.map((donor) => {
+        acc += parseFloat(donor.Amount)
+        const date = DateTime.fromISO(donor.Date)
+        return {
+          x: date,
+          y: acc,
+          donor,
+        }
+      })
+      data.value = {
+        datasets: [
+          {
+            label: "Donations",
+            data: donations,
+            radius: 3,
           },
-        },
-        annotation: {
-          annotations: {
-            goal: {
-              type: "line",
-              value: goal,
-              scaleID: "y",
-              borderColor: "#3FB781",
-              borderWidth: 2,
-              label: {
-                backgroundColor: "#3FB781",
-                content: `GOAL: ${currency.format(goal)}`,
-                color: "#fff",
-                enabled: true,
+        ],
+      }
+      options.value = {
+        plugins: {
+          title: {
+            display: true,
+            text: "Donation History",
+          },
+          colorschemes: {
+            scheme: "brewer.DarkTwo3",
+          },
+          autocolors: true,
+          tooltip: {
+            callbacks: {
+              afterBody: function (context) {
+                console.log(context)
+                return `${context[0].raw.donor.Name}: ${currency.format(
+                  parseFloat(context[0].raw.donor.Amount)
+                )}`
+              },
+              label: function (context) {
+                var label = context.dataset.label || ""
+                console.log(context)
+                if (label) {
+                  label += ": "
+                }
+                if (context.parsed.y !== null) {
+                  label += new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                  }).format(context.parsed.y)
+                }
+                return label
               },
             },
-            constant: {
-              type: "line",
+          },
+          annotation: {
+            annotations: {
+              goal: {
+                type: "line",
+                value: goal,
+                scaleID: "y",
+                borderColor: "#3FB781",
+                borderWidth: 2,
+                label: {
+                  backgroundColor: "#3FB781",
+                  content: `GOAL: ${currency.format(goal)}`,
+                  color: "#fff",
+                  enabled: true,
+                },
+              },
+              constant: {
+                type: "line",
 
-              yMin: 0,
-              borderDash: [12, 12],
-              yMax: goal,
-              borderColor: "#F1A102",
-              borderWidth: 2,
+                yMin: 0,
+                borderDash: [12, 12],
+                yMax: goal,
+                borderColor: "#F1A102",
+                borderWidth: 2,
+              },
             },
           },
         },
-      },
-      responsive: true,
-      aspectRatio: 1.75,
-      scales: {
-        x: {
-          type: "time",
-          time: {
-            unit: "day",
+        responsive: true,
+        aspectRatio: 1.75,
+        scales: {
+          x: {
+            type: "time",
+            time: {
+              unit: "day",
+            },
+            max: toRaw(props.project).EndDate,
           },
-          min: startDate,
-          max: moment(props.project.EndDate),
-        },
 
-        y: {
-          max: goal > pledged ? goal : pledged,
-          min: 0,
+          y: {
+            max: goal > pledged ? goal : pledged,
+            min: 0,
+          },
         },
-      },
-    }
-    return { data: { datasets: [dataset] }, options }
+      }
+    })
+    return { data, options }
   },
 })
 </script>
