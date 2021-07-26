@@ -14,10 +14,15 @@
   "dependencies": {
     "@quasar/extras": "^1.0.0",
     "axios": "^0.21.1",
+    "chart.js": "^3.5.0",
+    "chartjs-adapter-moment": "^1.0.0",
+    "chartjs-plugin-annotation": "^1.0.2",
+    "chartjs-plugin-colorschemes": "git://github.com/wreality/chartjs-plugin-colorschemes.git#v3",
     "core-js": "^3.6.5",
     "moment": "^2.29.1",
     "node-fetch": "^2.6.1",
-    "quasar": "^2.0.0"
+    "quasar": "^2.0.0",
+    "vue-chart-3": "^0.4.8"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.14",

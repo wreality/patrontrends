@@ -9,7 +9,7 @@ q-layout(view="lHh Lpr lFf")
     q-page.col-10.q-pt-md
       q-input.row(
         v-model="patronicityUrl",
-        label="Patronicity Project URL",
+        label="Paste a Patronicity Project URL to view stats",
         outlined,
         :error="errorMessage.length > 0",
         :error-message="errorMessage"
@@ -19,7 +19,7 @@ q-layout(view="lHh Lpr lFf")
 
 <script>
 import { defineComponent, ref, watchEffect } from "vue"
-import { useRouter, useRoute } from "vue-router"
+import { useRouter } from "vue-router"
 
 export default defineComponent({
   name: "MainLayout",
@@ -32,14 +32,10 @@ export default defineComponent({
       "https://www.patronicity.com/project/([\\w_]+)#!/$"
     )
     const router = useRouter()
-    const route = useRoute()
 
     watchEffect(() => {
       errorMessage.value = ""
       if (patronicityUrl.value === "") {
-        if (route.params?.slug) {
-          patronicityUrl.value = `https://www.patronicity.com/project/${route.params.slug}#!/`
-        }
         return
       }
       if (!slugRegex.test(patronicityUrl.value)) {
@@ -49,6 +45,7 @@ export default defineComponent({
       }
 
       const slug = patronicityUrl.value.match(slugRegex)[1]
+      patronicityUrl.value = ""
 
       router.push({ path: `/${slug}` })
     })

@@ -2,11 +2,8 @@
 div
   .row.text-center
     stat-box(:value="daysRemaining", caption="days reminaing")
-    stat-box(:value="`\$${pledged.toFixed(2)}`", caption="pledged")
-    stat-box(
-      :value="`\$${remainingAmount.toFixed(2)}`",
-      caption="left to raise"
-    )
+    stat-box(:value="currency(pledged)", caption="pledged")
+    stat-box(:value="currency(remainingAmount)", caption="left to raise")
 
   .row.q-my-md
     .col-3.flex.flex-center
@@ -44,15 +41,15 @@ div
       caption="donations"
     )
     stat-box.col-md-3.col-sm-6(
-      :value="`\$${(pledged / project.donors.length).toFixed(2)}`",
+      :value="currency(pledged / project.donors.length)",
       caption="average donation"
     )
     stat-box.col-md-3.col-sm-6(
-      :value="`\$${(pledged / daysElapsed).toFixed(2)}`",
+      :value="currency(pledged / daysElapsed)",
       caption="Pledged / day"
     )
     stat-box.col-md-3.col-sm-6(
-      :value="`\$${remainingAmount ? (remainingAmount / daysRemaining).toFixed(2) : '--'}`",
+      :value="remainingAmount ? currency(remainingAmount / daysRemaining) : '--'",
       caption="Remaining / day"
     )
 </template>
@@ -61,6 +58,7 @@ div
 import { computed } from "vue"
 import moment from "moment"
 import StatBox from "components/StatBox.vue"
+
 export default {
   name: "Stats",
   components: { StatBox },
@@ -110,6 +108,11 @@ export default {
       return remaining > 0 ? remaining : 0
     })
 
+    const currency = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    })
+
     return {
       projectStart,
       daysRemaining,
@@ -119,6 +122,7 @@ export default {
       pledged,
       remainingAmount,
       goal,
+      currency: currency.format,
     }
   },
 }
