@@ -9,7 +9,7 @@ q-card
     .text-h6 {{ project.Name }}
   stats(:project="project", v-if="projectLoaded")
 .row.q-pt-md
-  q-card.col-md-6
+  q-card.col-md-6.col-xs-12
     q-card-section
       donations-per-day(:project="project", v-if="projectLoaded")
 </template>

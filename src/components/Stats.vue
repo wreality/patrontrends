@@ -1,9 +1,15 @@
 <template lang="pug">
 q-card-section
   .row.text-center
-    stat-box(:value="daysRemaining", caption="days reminaing")
-    stat-box(:value="currency(pledged)", caption="pledged")
-    stat-box(:value="currency(remainingAmount)", caption="left to raise")
+    stat-box.col-md-4.col-xs-12(
+      :value="daysRemaining",
+      caption="days reminaing"
+    )
+    stat-box.col-md-4.col-xs-12(:value="currency(pledged)", caption="pledged")
+    stat-box.col-md-4.col-xs-12(
+      :value="currency(remainingAmount)",
+      caption="left to raise"
+    )
 
   .row.q-my-md
     .col-3.flex.flex-center
@@ -37,19 +43,19 @@ q-card-section
           )
 q-card-section.bg-accent.text-white
   .row.text-center
-    stat-box.col-md-3.col-sm-6(
+    stat-box.col-md-3.col-sm-6.col-xs-6(
       :value="project.donors.length",
       caption="donations"
     )
-    stat-box.col-md-3.col-sm-6(
+    stat-box.col-md-3.col-xs-6(
       :value="currency(pledged / project.donors.length)",
       caption="average donation"
     )
-    stat-box.col-md-3.col-sm-6(
+    stat-box.col-md-3.col-xs-6(
       :value="currency(pledged / daysElapsed)",
       caption="Pledged / day"
     )
-    stat-box.col-md-3.col-sm-6(
+    stat-box.col-md-3.col-xs-6(
       :value="remainingAmount ? currency(remainingAmount / daysRemaining) : '--'",
       caption="Remaining / day"
     )

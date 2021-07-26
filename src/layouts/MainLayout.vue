@@ -4,7 +4,9 @@ q-layout(view="lHh Lpr lFf")
     q-toolbar
       q-toolbar-title Patronicity Trends
       div
-        a(href="https://github.com/wreality/patrontrends") GitHub
+        a.text-white.decoration-none(
+          href="https://github.com/wreality/patrontrends"
+        ) GitHub
   q-page-container.row.flex-center
     q-page.col-10.q-pt-md
       q-input.row(

@@ -1,5 +1,5 @@
 <template lang="pug">
-.col
+div
   .text-h6 {{ value }}
   .text-caption {{ caption }}
 </template>

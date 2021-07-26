@@ -50,12 +50,13 @@ export default defineComponent({
       return {
         x: date,
         y: acc,
+        donor,
       }
     })
     const dataset = {
       label: "Donations",
       data,
-      radius: 5,
+      radius: 3,
     }
     const options = {
       plugins: {
@@ -67,6 +68,30 @@ export default defineComponent({
           scheme: "brewer.DarkTwo3",
         },
         autocolors: true,
+        tooltip: {
+          callbacks: {
+            afterBody: function (context) {
+              console.log(context)
+              return `${context[0].raw.donor.Name}: ${currency.format(
+                parseFloat(context[0].raw.donor.Amount)
+              )}`
+            },
+            label: function (context) {
+              var label = context.dataset.label || ""
+              console.log(context)
+              if (label) {
+                label += ": "
+              }
+              if (context.parsed.y !== null) {
+                label += new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                }).format(context.parsed.y)
+              }
+              return label
+            },
+          },
+        },
         annotation: {
           annotations: {
             goal: {
@@ -94,7 +119,8 @@ export default defineComponent({
           },
         },
       },
-      aspectRatio: 2,
+      responsive: true,
+      aspectRatio: 1.75,
       scales: {
         x: {
           type: "time",
