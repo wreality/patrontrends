@@ -41,7 +41,10 @@ export default defineComponent({
     const pledged = parseFloat(props.project.PledgeAmount)
 
     let acc = 0
-    const data = [...props.project.donors].reverse().map((donor) => {
+    const donors = [...props.project.donors]
+
+    donors.sort((a, b) => moment(a.Date).diff(moment(b.Date)))
+    const data = donors.map((donor) => {
       acc += parseFloat(donor.Amount)
       const date = moment(donor.Date)
       return {
