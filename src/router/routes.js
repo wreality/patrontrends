@@ -11,6 +11,11 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/stream/:slug",
+    props: true,
+    component: () => import("pages/Stream.vue"),
+  },
 
   // Always leave this as last one,
   // but you can also remove it
