@@ -2,7 +2,8 @@
 q-layout(view="lHh Lpr lFf")
   q-header(elevated="")
     q-toolbar
-      q-toolbar-title Patronicity Trends
+      q-toolbar-title
+        router-link.text-white.decoration-none(to="/") Patronicity Trends
       div
         a.text-white.decoration-none(
           href="https://github.com/wreality/patrontrends"

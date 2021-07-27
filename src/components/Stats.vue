@@ -14,6 +14,9 @@ q-card-section
   .row.q-my-md
     .col-3.flex.flex-center
       .text-center.text-subtitle2 Goal Progress
+        q-icon.inline-tip(name="help")
+          q-tooltip
+            | Percentage of the way to the campaign's financial goals.
     .col-9
       q-linear-progress(
         size="50px",
@@ -29,6 +32,9 @@ q-card-section
   .row.q-my-md
     .col-3.flex.flex-center
       .text-center.text-subtitle2 Campaign Deadline
+        q-icon.inline-tip(name="help")
+          q-tooltip
+            | Percentage of the way to the campaign ending date.
     .col-9
       q-linear-progress(
         size="50px",
@@ -47,18 +53,26 @@ q-card-section.bg-accent.text-white
       :value="project.donors.length",
       caption="donations"
     )
+      template(#tooltip)
+        | Number of donations you have received
     stat-box.col-md-3.col-xs-6(
       :value="currency(pledged / project.donors.length)",
       caption="average donation"
     )
+      template(#tooltip)
+        | Formula: Pledged amount / number of donations
     stat-box.col-md-3.col-xs-6(
       :value="currency(pledged / daysElapsed)",
       caption="Pledged / day"
     )
+      template(#tooltip)
+        | Formula: Pledged amount / days elapsed in campaign
     stat-box.col-md-3.col-xs-6(
       :value="remainingAmount ? currency(remainingAmount / daysRemaining) : '--'",
       caption="Remaining / day"
     )
+      template(#tooltip)
+        | Formula: Remaining amount / days remaining in campaign
 </template>
 
 <script>

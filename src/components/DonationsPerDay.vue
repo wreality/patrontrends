@@ -1,4 +1,8 @@
 <template lang="pug">
+q-icon(name="help")
+  q-tooltip
+    p Each donation charted over time.
+    p The dotted diagonal line represents a linear progress of campaign donations over time.
 line-chart(:chartData="data", :options="options")
 </template>
 
