@@ -1,5 +1,5 @@
 <template lang="pug">
-q-icon(name="help")
+q-icon.float-right(name="help")
   q-tooltip
     | Histogram view of the amounts of individual donations.
 bar-chart(:chartData="data", :options="options", v-if="data")

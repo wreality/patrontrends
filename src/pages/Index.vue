@@ -16,14 +16,17 @@ div
     .col-md-6.col-xs-12.q-pa-xs
       q-card
         q-card-section
+          .text-h6 Donations over Time
           donations-per-day(:project="project")
     .col-md-6.col-xs-12.q-pa-xs
       q-card
         q-card-section
+          .text-h6 Average Donations
           average-donations(:project="project")
     .col-md-6.col-xs-12.q-pa-xs
       q-card
         q-card-section
+          .text-h6 Donation Size
           donations-histo(:project="project")
   .row
     q-card.col

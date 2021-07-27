@@ -1,5 +1,5 @@
 <template lang="pug">
-q-icon(name="help")
+q-icon.float-right(name="help")
   q-tooltip
     p Each donation charted over time.
     p The dotted diagonal line represents a linear progress of campaign donations over time.
@@ -58,10 +58,6 @@ export default defineComponent({
     }
     const options = {
       plugins: {
-        title: {
-          display: true,
-          text: "Donation History",
-        },
         colorschemes: {
           scheme: "brewer.DarkTwo3",
         },

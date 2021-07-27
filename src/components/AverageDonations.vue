@@ -1,5 +1,5 @@
 <template lang="pug">
-q-icon(name="help")
+q-icon.float-right(name="help")
   q-tooltip
     | Each point is the pledged / day and remaining / day values for a particular day.
 line-chart(:chartData="data", :options="options", v-if="data")
@@ -90,10 +90,6 @@ export default defineComponent({
     const data = { datasets }
     const options = {
       plugins: {
-        title: {
-          display: true,
-          text: "Rolling Donation Average",
-        },
         colorschemes: {
           scheme: "brewer.DarkTwo3",
         },
