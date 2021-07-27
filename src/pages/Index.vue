@@ -38,7 +38,7 @@ div
           This is a quick and dirty side project by the folks behind
           [Lansing Makers Network's Patronicity campaign](https://www.patronicity.com/project/lansing_makers_network_make_the_move#!/).
           We use the APIs powering the Patronicity site to show you information about a campaign.
-          Everything is delivered directly to your browser and we maintain no data and do no data analysis on our servers All of that is performed by your browser.
+          Everything is delivered directly to your browser and we maintain no data and do no data analysis in "the cloud". All analysis is performed by your browser.
 
 
           This site is hosted on the free tier of [Netlify](https://www.netlify.com).  If you're into Jamstack stuff, you should absolutely show them some love
@@ -47,9 +47,9 @@ div
         p.text-weight-bolder
           :markdown-it
             IMPORTANT: This site is not maintained, endorsed or supported by Patronicity. Please don't pester their support with questions.
-            The analysis you see here is also our naive attempt at interpreting the available data. If you notice a discrepency, assume its our fault, not Patronicity's.
-            For campaigns: your campaign is your business--make your strategic decisions with your own data analysis, not ours (no matter how awesome we seem).
-            For supporters, take this data with a grain of salt.  We're not statisticians.
+            The analysis you see here is also our naive attempt at interpreting the available data. If you notice a discrepency assume its our fault, not Patronicity's.
+            For campaigns: your campaign is your business&mdash;make your strategic decisions with your own data analysis, not ours (no matter how awesome we seem).
+            For supporters: take these analyses with a grain of salt.  We're not statisticians.
 </template>
 
 <script>
