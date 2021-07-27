@@ -35,7 +35,8 @@ div
 
 
           This site is hosted on the free tier of [Netlify](https://www.netlify.com).  If you're into Jamstack stuff, you should absolutely show them some love
-          and see what they have to offer. If you find this site useful, feel free to consider supporting our campaign. We'll keep this site up and running as long as it doesn't cost us anything. 😁
+          and see what they have to offer. If you find this site useful, feel free to consider supporting
+          [our campaign](https://www.patronicity.com/project/lansing_makers_network_make_the_move#!/). We'll keep this site up and running as long as it doesn't cost us anything. 😁
         p.text-weight-bolder
           :markdown-it
             IMPORTANT: This site is not maintained by Patronicity. Please don't pester their support with questions.
