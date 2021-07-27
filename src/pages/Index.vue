@@ -21,6 +21,10 @@ div
       q-card
         q-card-section
           average-donations(:project="project")
+    .col-md-6.col-xs-12.q-pa-xs
+      q-card
+        q-card-section
+          donations-histo(:project="project")
   .row
     q-card.col
       q-card-section(v-if="!slug")
@@ -51,9 +55,10 @@ import Stats from "components/Stats.vue"
 import { api } from "src/boot/axios"
 import DonationsPerDay from "components/DonationsPerDay.vue"
 import AverageDonations from "components/AverageDonations.vue"
+import DonationsHisto from "components/DonationsHisto.vue"
 export default defineComponent({
   name: "PageIndex",
-  components: { Stats, DonationsPerDay, AverageDonations },
+  components: { Stats, DonationsPerDay, AverageDonations, DonationsHisto },
   props: {
     slug: {
       type: String,
