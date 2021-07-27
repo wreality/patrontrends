@@ -46,7 +46,7 @@ div
           [our campaign](https://www.patronicity.com/project/lansing_makers_network_make_the_move#!/). We'll keep this site up and running as long as it doesn't cost us anything. 😁
         p.text-weight-bolder
           :markdown-it
-            IMPORTANT: This site is not maintained by Patronicity. Please don't pester their support with questions.
+            IMPORTANT: This site is not maintained, endorsed or supported by Patronicity. Please don't pester their support with questions.
             The analysis you see here is also our naive attempt at interpreting the available data. If you notice a discrepency, assume its our fault, not Patronicity's.
             For campaigns: your campaign is your business--make your strategic decisions with your own data analysis, not ours (no matter how awesome we seem).
             For supporters, take this data with a grain of salt.  We're not statisticians.
