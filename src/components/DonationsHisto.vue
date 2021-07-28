@@ -31,17 +31,15 @@ export default defineComponent({
       .thresholds(thresholdFunction)
 
     const buckets = binner(props.project.donors)
-
-    const donationData = buckets.map((b) => b.length)
-    const labels = buckets.map((b) => `${b.x1}`)
-
-    console.log(donationData)
-    console.log(labels)
     console.log(buckets)
+    const donationData = buckets.map((b) => b.length)
+    const labels = [0, ...buckets.map((b) => b.x1)]
+    const bucketSize = buckets[0].x1 - buckets[0].x0
     const datasets = [
       {
-        label: "Received",
+        label: "Pledges",
         data: donationData,
+        xAxisID: "xA",
       },
     ]
 
@@ -51,27 +49,40 @@ export default defineComponent({
         colorschemes: {
           scheme: "brewer.DarkTwo3",
         },
-        autocolors: true,
-      },
-      tooltip: {
-        callbacks: {
-          label: function (context) {
-            var label = context.dataset.label || ""
-            console.log(context)
-            if (label) {
-              label += ": "
-            }
-            if (context.parsed.y !== null) {
-              label += new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-              }).format(context.parsed.y)
-            }
-            return label
+        legend: {
+          display: false,
+        },
+        tooltip: {
+          callbacks: {
+            title: function (context) {
+              console.log(context)
+              const min = parseInt(context[0].label)
+              return `$${min} - $${min + bucketSize}`
+            },
           },
         },
       },
       aspectRatio: 1.75,
+      barPercentage: 1,
+      categoryPercentage: 1,
+      scales: {
+        x: {
+          display: true,
+          offset: false,
+          grid: {
+            offset: false,
+            display: false,
+          },
+        },
+        xA: {
+          display: false,
+          offset: true,
+          max: labels.length - 2,
+        },
+        y: {
+          beginAtZero: true,
+        },
+      },
     }
     return { data, options }
   },
