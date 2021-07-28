@@ -40,13 +40,14 @@ export default defineComponent({
     donors.sort((a, b) => DateTime.fromISO(a.Date) - DateTime.fromISO(b.Date))
     const donations = donors.map((donor) => {
       acc += parseFloat(donor.Amount)
-      const date = DateTime.fromISO(donor.Date)
+      const date = donor.Date
       return {
         x: date,
         y: acc,
         donor,
       }
     })
+    donations.push({ x: DateTime.now(), y: pledged })
     const data = {
       datasets: [
         {
@@ -65,7 +66,9 @@ export default defineComponent({
         tooltip: {
           callbacks: {
             afterBody: function (context) {
-              console.log(context)
+              if (!context[0].raw.donor) {
+                return `Current: ${currency.format(pledged)}`
+              }
               return `${context[0].raw.donor.Name}: ${currency.format(
                 parseFloat(context[0].raw.donor.Amount)
               )}`
