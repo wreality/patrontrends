@@ -20,7 +20,7 @@ Chart.register(annotationPlugin)
 const currency = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
-})
+}).format
 
 export default defineComponent({
   components: { LineChart },
@@ -35,19 +35,19 @@ export default defineComponent({
     const pledged = parseFloat(props.project.PledgeAmount)
 
     let acc = 0
-    const donors = [...props.project.donors]
 
-    donors.sort((a, b) => DateTime.fromISO(a.Date) - DateTime.fromISO(b.Date))
-    const donations = donors.map((donor) => {
-      acc += parseFloat(donor.Amount)
-      const date = donor.Date
-      return {
-        x: date,
-        y: acc,
-        donor,
-      }
-    })
+    const donations = Array.from(props.project.donors)
+      .sort((a, b) => DateTime.fromISO(a.Date) - DateTime.fromISO(b.Date))
+      .map((d) => {
+        acc += parseFloat(d.Amount)
+        return {
+          x: d.Date,
+          y: acc,
+          donor: d,
+        }
+      })
     donations.push({ x: DateTime.now(), y: pledged })
+
     const data = {
       datasets: [
         {
@@ -66,12 +66,11 @@ export default defineComponent({
         tooltip: {
           callbacks: {
             afterBody: function (context) {
-              if (!context[0].raw.donor) {
-                return `Current: ${currency.format(pledged)}`
+              const donor = context[0].raw?.donor
+              if (donor) {
+                return `Current: ${currency(pledged)}`
               }
-              return `${context[0].raw.donor.Name}: ${currency.format(
-                parseFloat(context[0].raw.donor.Amount)
-              )}`
+              return `${donor.Name}: ${currency(parseFloat(donor.Amount))}`
             },
             label: function (context) {
               var label = context.dataset.label || ""
@@ -99,7 +98,7 @@ export default defineComponent({
               borderWidth: 2,
               label: {
                 backgroundColor: "#3FB781",
-                content: `GOAL: ${currency.format(goal)}`,
+                content: `GOAL: ${currency(goal)}`,
                 color: "#fff",
                 enabled: true,
               },
