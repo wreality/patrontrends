@@ -16,18 +16,23 @@ div
     .col-md-6.col-xs-12.q-pa-xs
       q-card
         q-card-section
-          .text-h6 Donations over Time
-          donations-per-day(:project="project")
+          .text-h6 Goal Progress
+          donations-history(:project="project")
     .col-md-6.col-xs-12.q-pa-xs
       q-card
         q-card-section
-          .text-h6 Average Donations
-          average-donations(:project="project")
+          .text-h6 Donations Per Day
+          donations-per-day(:project="project")
     .col-md-6.col-xs-12.q-pa-xs
       q-card
         q-card-section
           .text-h6 Donation Size
           donations-histo(:project="project")
+    .col-md-6.col-xs-12.q-pa-xs
+      q-card
+        q-card-section
+          .text-h6 Average Donations
+          average-donations(:project="project")
   .row
     q-card.col
       q-card-section(v-if="!slug")
@@ -57,11 +62,18 @@ import { defineComponent, ref, onMounted, computed, toRef } from "vue"
 import Stats from "components/Stats.vue"
 import { api } from "src/boot/axios"
 import DonationsPerDay from "components/DonationsPerDay.vue"
+import DonationsHistory from "components/DonationsHistory.vue"
 import AverageDonations from "components/AverageDonations.vue"
 import DonationsHisto from "components/DonationsHisto.vue"
 export default defineComponent({
   name: "PageIndex",
-  components: { Stats, DonationsPerDay, AverageDonations, DonationsHisto },
+  components: {
+    Stats,
+    DonationsPerDay,
+    AverageDonations,
+    DonationsHisto,
+    DonationsHistory,
+  },
   props: {
     slug: {
       type: String,
