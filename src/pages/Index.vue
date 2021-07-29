@@ -37,8 +37,8 @@ div
     q-card.col
       q-card-section(v-if="!slug")
         q-banner.bg-accent.text-white(rounded)
-        :markdown-it
-          Paste a [Patronicity](https://www.patronicity.com) project URL above to get started.
+          :markdown-it
+            Paste a [Patronicity](https://www.patronicity.com) project URL above to get started.
       q-card-section
         .text-h6.text-weight-bolder About this Site
         :markdown-it
@@ -121,3 +121,12 @@ export default defineComponent({
   },
 })
 </script>
+
+<style>
+.q-banner p {
+  display: inline;
+}
+.q-banner p a {
+  color: white;
+}
+</style>
