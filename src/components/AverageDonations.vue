@@ -10,6 +10,7 @@ import { LineChart } from "vue-chart-3"
 import { defineComponent } from "vue"
 import { DateTime } from "luxon"
 import { Chart, registerables } from "chart.js"
+import { rollups, sum, cumsum, zip } from "d3-array"
 import annotationPlugin from "chartjs-plugin-annotation"
 import "chartjs-adapter-luxon"
 import "chartjs-plugin-colorschemes"
@@ -38,23 +39,24 @@ export default defineComponent({
     const goal = parseFloat(props.project.Goal)
     //const pledged = parseFloat(props.project.PledgeAmount)
 
-    let acc = 0
-    const dayMap = new Map()
-    dayMap.set(0, 0)
-    Array.from(props.project.donors)
-      .sort((a, b) => DateTime.fromISO(a.Date) - DateTime.fromISO(b.Date))
-      .forEach((donor) => {
-        acc += parseFloat(donor.Amount)
-        const campaignDay = DateTime.fromISO(donor.Date)
+    //   let acc = 0
+
+    const dayTotals = rollups(
+      props.project.donors,
+      (v) => sum(v, (d) => parseFloat(d.Amount)),
+      (d) =>
+        DateTime.fromISO(d.Date)
           .startOf("day")
           .diff(startDate, "days")
           .toObject().days
-        dayMap.set(campaignDay, acc)
-      })
-    const dayTotals = Array.from(dayMap).reverse()
+    ).sort((a, b) => a[0] - b[0])
+
+    const dayCumSum = zip(
+      dayTotals.map((v) => v[0]),
+      cumsum(dayTotals, (v) => v[1])
+    ).reverse()
 
     const today = DateTime.now().startOf("day")
-
     const currentDay =
       today > endDate
         ? campaignLength
@@ -62,18 +64,21 @@ export default defineComponent({
 
     const averageDonationPerDay = []
     const remainingDonationNeed = []
-    for (var i = 0; i <= currentDay; i++) {
-      const date = startDate.plus({ days: i })
+
+    ;[...Array(currentDay + 1).keys()].forEach((d) => {
+      const date = startDate.plus({ days: d }).toISODate()
       // eslint-disable-next-line
-      const total = dayTotals.find(([day, _]) => day <= i)[1]
-      averageDonationPerDay.push({ x: date, y: total / (i + 1) })
+      const total = dayCumSum.find(([day, _]) => day <= d)?.[1]
+      console.log(total)
+      averageDonationPerDay.push({ x: date, y: total / (d + 1) })
       if (goal - total > 0) {
         remainingDonationNeed.push({
           x: date,
-          y: (goal - total) / (campaignLength - i),
+          y: (goal - total) / (campaignLength - d),
         })
       }
-    }
+    })
+
     const datasets = [
       {
         label: "Received",
@@ -94,22 +99,22 @@ export default defineComponent({
           scheme: "brewer.DarkTwo3",
         },
         autocolors: true,
-      },
-      tooltip: {
-        callbacks: {
-          label: function (context) {
-            var label = context.dataset.label || ""
-            console.log(context)
-            if (label) {
-              label += ": "
-            }
-            if (context.parsed.y !== null) {
-              label += new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-              }).format(context.parsed.y)
-            }
-            return label
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              var label = context.dataset.label || ""
+              console.log(context)
+              if (label) {
+                label += ": "
+              }
+              if (context.parsed.y !== null) {
+                label += new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                }).format(context.parsed.y)
+              }
+              return label + "/day"
+            },
           },
         },
       },
