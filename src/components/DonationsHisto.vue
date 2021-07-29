@@ -2,6 +2,7 @@
 q-icon.float-right(name="help")
   q-tooltip
     | Histogram view of the amounts of individual donations.
+.text-h6 Pledge Size
 bar-chart(:chartData="data", :options="options", v-if="data")
 </template>
 

@@ -1,14 +1,18 @@
 <template lang="pug">
-q-icon.float-right(name="help")
-  q-tooltip
-    p Each donation charted over time.
-    p The dotted diagonal line represents a linear progress of campaign donations over time.
+.title
+  .float-right
+    q-toggle.q-mx-md(v-model="zoomed", label="Zoom")
+    q-icon(name="help")
+      q-tooltip
+        p Each donation charted over time.
+        p The dotted diagonal line represents a linear progress of campaign donations over time.
+  .text-h6 Goal Progress
 line-chart(:chartData="data", :options="options")
 </template>
 
 <script>
 import { LineChart } from "vue-chart-3"
-import { defineComponent, toRaw } from "vue"
+import { defineComponent, toRaw, computed, ref } from "vue"
 import { DateTime } from "luxon"
 import { Chart, registerables } from "chart.js"
 import annotationPlugin from "chartjs-plugin-annotation"
@@ -33,8 +37,22 @@ export default defineComponent({
   setup(props) {
     const goal = parseFloat(props.project.Goal)
     const pledged = parseFloat(props.project.PledgeAmount)
-
+    const zoomed = ref(false)
     let acc = 0
+
+    const toggleZoom = () => {
+      zoomed.value = !zoomed.value
+    }
+
+    const projectStart = computed(() => {
+      const startEvent = Object.entries(props.project.timeline).find(
+        // eslint-disable-next-line
+        ([_, v]) => {
+          return v.type === "event" && v.subtype == "campaign_started"
+        }
+      )[1]
+      return DateTime.fromISO(startEvent.date)
+    })
 
     const donations = Array.from(props.project.donors)
       .sort((a, b) => DateTime.fromISO(a.Date) - DateTime.fromISO(b.Date))
@@ -47,7 +65,7 @@ export default defineComponent({
         }
       })
     donations.push({ x: DateTime.now(), y: pledged })
-
+    donations.unshift({ x: projectStart.value.toISO(), y: 0 })
     const data = {
       datasets: [
         {
@@ -57,10 +75,17 @@ export default defineComponent({
         },
       ],
     }
-    const options = {
+
+    const campaignOver =
+      DateTime.now() > DateTime.fromISO(props.project.EndDate)
+
+    const options = computed(() => ({
       plugins: {
         colorschemes: {
           scheme: "brewer.DarkTwo3",
+        },
+        legend: {
+          display: false,
         },
         autocolors: true,
         tooltip: {
@@ -109,6 +134,8 @@ export default defineComponent({
               yMin: 0,
               borderDash: [12, 12],
               yMax: goal,
+              xMax: props.project.EndDate,
+              xMin: projectStart.value.toISO(),
               borderColor: "#F1A102",
               borderWidth: 2,
             },
@@ -123,16 +150,22 @@ export default defineComponent({
           time: {
             unit: "day",
           },
-          max: toRaw(props.project).EndDate,
+          min: props.project.StartDate,
+          max:
+            !zoomed.value || campaignOver
+              ? toRaw(props.project).EndDate
+              : DateTime.now().toISO(),
         },
 
         y: {
-          max: (goal > pledged ? goal : pledged) * 1.05,
+          // max:  * 1.05,
+          max:
+            (zoomed.value ? pledged : goal > pledged ? goal : pledged) * 1.05,
           min: 0,
         },
       },
-    }
-    return { data, options }
+    }))
+    return { data, options, zoomed, toggleZoom }
   },
 })
 </script>

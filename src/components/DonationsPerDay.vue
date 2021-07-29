@@ -1,7 +1,9 @@
 <template lang="pug">
-q-icon.float-right(name="help")
-  q-tooltip
-    p Sum of all donations on each day of the campaign.
+.title
+  q-icon.float-right(name="help")
+    q-tooltip
+      p Sum of all donations on each day of the campaign.
+  .text-h6 Pledge Total Per Day
 bar-chart(:chartData="data", :options="options")
 </template>
 

@@ -2,6 +2,7 @@
 q-icon.float-right(name="help")
   q-tooltip
     | Each point is the pledged / day and remaining / day values for a particular day.
+.text-h6 Average Pledges
 line-chart(:chartData="data", :options="options", v-if="data")
 </template>
 
