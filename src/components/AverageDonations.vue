@@ -69,8 +69,9 @@ export default defineComponent({
       const date = startDate.plus({ days: d }).toISODate()
       // eslint-disable-next-line
       const total = dayCumSum.find(([day, _]) => day <= d)?.[1]
-      console.log(total)
+
       averageDonationPerDay.push({ x: date, y: total / (d + 1) })
+
       if (goal - total > 0) {
         remainingDonationNeed.push({
           x: date,
@@ -103,7 +104,6 @@ export default defineComponent({
           callbacks: {
             label: function (context) {
               var label = context.dataset.label || ""
-              console.log(context)
               if (label) {
                 label += ": "
               }

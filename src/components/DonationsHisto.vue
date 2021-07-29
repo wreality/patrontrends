@@ -31,7 +31,7 @@ export default defineComponent({
       .thresholds(thresholdFunction)
 
     const buckets = binner(props.project.donors)
-    console.log(buckets)
+
     const donationData = buckets.map((b) => b.length)
     const labels = [0, ...buckets.map((b) => b.x1)]
     const bucketSize = buckets[0].x1 - buckets[0].x0
@@ -55,7 +55,6 @@ export default defineComponent({
         tooltip: {
           callbacks: {
             title: function (context) {
-              console.log(context)
               const min = parseInt(context[0].label)
               return `$${min} - $${min + bucketSize}`
             },
