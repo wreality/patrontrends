@@ -16,7 +16,7 @@ q-card-section
       .text-center.text-subtitle2 Goal Progress
         q-icon.inline-tip(name="help")
           q-tooltip
-            | Percentage of the way to the campaign's financial goals.
+            | Percentage of the way to the campaign's pledge goal.
     .col-9
       q-linear-progress(
         size="50px",
@@ -51,16 +51,16 @@ q-card-section.bg-accent.text-white
   .row.text-center
     stat-box.col-md-3.col-sm-6.col-xs-6(
       :value="project.donors.length",
-      caption="donations"
+      caption="pledges"
     )
       template(#tooltip)
-        | Number of donations you have received
+        | Number of pledges received
     stat-box.col-md-3.col-xs-6(
       :value="currency(pledged / project.donors.length)",
-      caption="average donation"
+      caption="average pledge"
     )
       template(#tooltip)
-        | Formula: Pledged amount / number of donations
+        | Formula: Pledged amount / number of pledges
     stat-box.col-md-3.col-xs-6(
       :value="currency(pledged / daysElapsed)",
       caption="Pledged / day"

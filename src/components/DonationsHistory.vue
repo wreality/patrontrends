@@ -51,7 +51,7 @@ export default defineComponent({
     const data = {
       datasets: [
         {
-          label: "Donations",
+          label: "Pledges",
           data: donations,
           radius: 3,
         },

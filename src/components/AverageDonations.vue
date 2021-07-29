@@ -82,12 +82,12 @@ export default defineComponent({
 
     const datasets = [
       {
-        label: "Received",
+        label: "Pledged",
         data: averageDonationPerDay,
         radius: 3,
       },
       {
-        label: "Needed",
+        label: "Remaining",
         data: remainingDonationNeed,
         radius: 3,
       },

@@ -21,17 +21,17 @@ div
     .col-md-6.col-xs-12.q-pa-xs
       q-card
         q-card-section
-          .text-h6 Donations Per Day
+          .text-h6 Pledges Per Day
           donations-per-day(:project="project")
     .col-md-6.col-xs-12.q-pa-xs
       q-card
         q-card-section
-          .text-h6 Donation Size
+          .text-h6 Pledge Size
           donations-histo(:project="project")
     .col-md-6.col-xs-12.q-pa-xs
       q-card
         q-card-section
-          .text-h6 Average Donations
+          .text-h6 Average Pledges
           average-donations(:project="project")
   .row
     q-card.col
