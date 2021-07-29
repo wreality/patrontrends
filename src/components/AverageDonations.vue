@@ -65,7 +65,7 @@ export default defineComponent({
     const averageDonationPerDay = []
     const remainingDonationNeed = []
 
-    ;[...Array(currentDay + 1).keys()].forEach((d) => {
+    ;[...Array(Math.round(currentDay) + 1).keys()].forEach((d) => {
       const date = startDate.plus({ days: d }).toISODate()
       // eslint-disable-next-line
       const total = dayCumSum.find(([day, _]) => day <= d)?.[1]
