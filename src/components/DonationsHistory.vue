@@ -67,7 +67,7 @@ export default defineComponent({
           callbacks: {
             afterBody: function (context) {
               const donor = context[0].raw?.donor
-              if (donor) {
+              if (!donor) {
                 return `Current: ${currency(pledged)}`
               }
               return `${donor.Name}: ${currency(parseFloat(donor.Amount))}`
