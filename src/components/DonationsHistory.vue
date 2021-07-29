@@ -127,7 +127,7 @@ export default defineComponent({
         },
 
         y: {
-          max: goal > pledged ? goal : pledged,
+          max: (goal > pledged ? goal : pledged) * 1.05,
           min: 0,
         },
       },
