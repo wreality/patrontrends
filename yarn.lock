@@ -2152,6 +2152,10 @@ chartjs-plugin-annotation@^1.0.2:
   version "0.4.0"
   resolved "git://github.com/wreality/chartjs-plugin-colorschemes.git#e2838d6c7590bc3ef233ca0917240f670ce6aa47"
 
+"chartjs-plugin-trendlines@git://github.com/jmm13/chartjs-plugin-trendline.git#Chartjs-3.x-support":
+  version "0.2.2"
+  resolved "git://github.com/jmm13/chartjs-plugin-trendline.git#8a2dd5fe8c8de32b621bf56f933087918cd2b458"
+
 chokidar@3.5.2, "chokidar@>=3.0.0 <4.0.0", chokidar@^3.4.2, chokidar@^3.5.1:
   version "3.5.2"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.5.2.tgz#dba3976fcadb016f66fd365021d91600d01c1e75"

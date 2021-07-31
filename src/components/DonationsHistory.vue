@@ -1,7 +1,7 @@
 <template lang="pug">
 .title
   .float-right
-    q-toggle.q-mx-md(v-model="zoomed", label="Zoom")
+    q-toggle.q-mx-md(v-if="!campaignOver", v-model="zoomed", label="Zoom")
     q-icon(name="help")
       q-tooltip
         p Each donation charted over time.
@@ -18,9 +18,11 @@ import { Chart, registerables } from "chart.js"
 import annotationPlugin from "chartjs-plugin-annotation"
 import "chartjs-adapter-luxon"
 import "chartjs-plugin-colorschemes"
+import trendlinePlugin from "chartjs-plugin-trendlines"
 
 Chart.register(...registerables)
 Chart.register(annotationPlugin)
+Chart.register(trendlinePlugin)
 const currency = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
@@ -39,10 +41,6 @@ export default defineComponent({
     const pledged = parseFloat(props.project.PledgeAmount)
     const zoomed = ref(false)
     let acc = 0
-
-    const toggleZoom = () => {
-      zoomed.value = !zoomed.value
-    }
 
     const projectStart = computed(() => {
       const startEvent = Object.entries(props.project.timeline).find(
@@ -66,12 +64,18 @@ export default defineComponent({
       })
     donations.push({ x: DateTime.now(), y: pledged })
     donations.unshift({ x: projectStart.value.toISO(), y: 0 })
+
     const data = {
       datasets: [
         {
           label: "Pledges",
           data: donations,
           radius: 3,
+          trendlineLinear: {
+            style: "#3e95cd",
+            lineStyle: "dotted",
+            width: 1,
+          },
         },
       ],
     }
@@ -165,7 +169,7 @@ export default defineComponent({
         },
       },
     }))
-    return { data, options, zoomed, toggleZoom }
+    return { data, options, zoomed, campaignOver }
   },
 })
 </script>

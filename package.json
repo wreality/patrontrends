@@ -19,6 +19,7 @@
     "chartjs-adapter-moment": "^1.0.0",
     "chartjs-plugin-annotation": "^1.0.2",
     "chartjs-plugin-colorschemes": "git://github.com/wreality/chartjs-plugin-colorschemes.git#v3",
+    "chartjs-plugin-trendlines": "git://github.com/jmm13/chartjs-plugin-trendline.git#Chartjs-3.x-support",
     "core-js": "^3.6.5",
     "d3-array": "^3.0.1",
     "jstransformer-markdown-it": "^2.1.0",
