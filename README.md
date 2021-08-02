@@ -1,26 +1,23 @@
 # PatronTrends (patrontrends)
 
-Look for trends in your patronicity campaign
+This is a quick and dirty side project by the folks behind [Lansing Makers Network's Patronicity campaign](https://www.patronicity.com/project/lansing_makers_network_make_the_move#!/). We use the APIs powering the Patronicity site to show you information about a campaign.
 
-## Install the dependencies
-```bash
-yarn
-```
+This site is hosted on the free tier of [Netlify](https://netlify.com/) at https://patrontrends.netlify.app. If you're into Jamstack stuff, you should absolutely show Netlify some love and see what they have to offer. If you find this site useful, feel free to consider supporting [our campaign](https://www.patronicity.com/project/lansing_makers_network_make_the_move#!/). We'll keep the application up and running as long as it doesn't cost us anything. 😁
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
-```bash
-quasar dev
-```
+**IMPORTANT: This project is not maintained, endorsed or supported by Patronicity. Please don't pester their support with questions. The analysis done by the application is our naive attempt at interpreting the available data. If you notice a discrepency assume its our fault, not Patronicity's. For campaigns: your campaign is your business—make your strategic decisions with your own data analysis, not ours (no matter how awesome we seem). For supporters: take these analyses with a grain of salt. We're not statisticians.**
 
-### Lint the files
-```bash
-yarn run lint
-```
+## Application
+The application is a Quasar 2.x application using Netlify serverless functions to fetch data from the Patronicity APIs.  These are not public APIs, but rather the APIs the Patronicity website uses to render the page, so they could change at any time, without notice. 
 
-### Build the app for production
-```bash
-quasar build
-```
+## Development
+### Install Netlify-cli
+`npm i -g netlify-cli`
 
-### Customize the configuration
-See [Configuring quasar.conf.js](https://v2.quasar.dev/quasar-cli/quasar-conf-js).
+### Install application deps
+`yarn install`
+
+### Start the netlify dev server
+`netlify dev`
+
+## Deployment 
+The Netlify site deploys automatically on push to master.  For a manual deploy run: `netlify deploy`
